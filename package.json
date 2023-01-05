@@ -5,13 +5,13 @@
 		"url": "https://github.com/volarjs/language-tools-starter.git"
 	},
 	"scripts": {
-		"build": "tsc -b tsconfig.json",
+		"build": "tsc -b packages/vscode-angular/tsconfig.json",
 		"watch": "npm run build && (npm run watch:tsc & npm run watch:esbuild)",
-		"watch:tsc": "tsc -b tsconfig.json -w",
-		"watch:esbuild": "cd ./packages/vscode-html1 && npm run watch",
+		"watch:tsc": "tsc -b packages/vscode-angular/tsconfig.json -w",
+		"watch:esbuild": "cd ./packages/vscode-angular && npm run watch",
 		"prerelease": "npm run build",
-		"pack": "cd ./packages/vscode-html1 && npm run pack",
-		"release": "cd ./packages/vscode-html1 && npm run release"
+		"pack": "cd ./packages/vscode-angular && npm run pack",
+		"release": "cd ./packages/vscode-angular && npm run release"
 	},
 	"devDependencies": {
 		"@types/node": "latest",

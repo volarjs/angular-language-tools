@@ -1,3 +1,3 @@
-let modulePath = './dist/node/client.js';
-try { modulePath = require.resolve('./out/client.js'); } catch { }
+let modulePath = './dist/node/client';
+try { modulePath = require.resolve('./out/client'); } catch { }
 module.exports = require(modulePath);

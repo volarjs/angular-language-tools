@@ -1,7 +1,7 @@
 require('esbuild').build({
 	entryPoints: {
 		client: './out/client.js',
-		server: './node_modules/@html1-language-tools/language-server/bin/html1-language-server.js',
+		server: './node_modules/@volar-examples/angular-language-server/bin/angular-language-server.js',
 	},
 	bundle: true,
 	metafile: process.argv.includes('--metafile'),
@@ -11,7 +11,7 @@ require('esbuild').build({
 	],
 	format: 'cjs',
 	platform: 'node',
-	tsconfig: '../../tsconfig.json',
+	tsconfig: './tsconfig.json',
 	define: { 'process.env.NODE_ENV': '"production"' },
 	minify: process.argv.includes('--minify'),
 	watch: process.argv.includes('--watch'),

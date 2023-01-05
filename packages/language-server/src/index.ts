@@ -1,48 +1,49 @@
-import { languageModule, Html1File } from '@html1-language-tools/language-core';
-import createEmmetPlugin from '@volar-plugins/emmet';
-import createHtmlPlugin from '@volar-plugins/html';
-import createCssPlugin from '@volar-plugins/css';
-import { createConnection, startLanguageServer, LanguageServerPlugin, Diagnostic } from '@volar/language-server/node';
+import { createTsLanguageModule, createHtmlLanguageModule, HTMLTemplateFile } from '@volar-examples/angular-language-core';
+import createTsPlugin from '@volar-plugins/typescript';
+import { createConnection, startLanguageServer, LanguageServerPlugin } from '@volar/language-server/node';
+import type { LanguageServicePlugin, Diagnostic } from '@volar/language-service';
 
 const plugin: LanguageServerPlugin = () => ({
-	extraFileExtensions: [{ extension: 'html1', isMixedContent: true, scriptKind: 7 }],
-	getLanguageModules() {
-		return [languageModule];
+	extraFileExtensions: [{ extension: 'html', isMixedContent: true, scriptKind: 7 }],
+	getLanguageModules(host) {
+		const ts = host.getTypeScriptModule();
+		if (ts) {
+			return [
+				createTsLanguageModule(ts),
+				createHtmlLanguageModule(ts),
+			];
+		}
+		return [];
 	},
 	getLanguageServicePlugins() {
 		return [
-			createHtmlPlugin(),
-			createCssPlugin(),
-			createEmmetPlugin(),
-			// custom html1 plugin
-			(context) => ({
-				validation: {
-					onSyntactic(document) {
-
-						const file = context.documents.getVirtualFileByUri(document.uri);
-						if (!(file instanceof Html1File)) return;
-
-						const styleNodes = file.htmlDocument.roots.filter(root => root.tag === 'style');
-						if (styleNodes.length <= 1) return;
-
-						const errors: Diagnostic[] = [];
-						for (let i = 1; i < styleNodes.length; i++) {
-							errors.push({
-								severity: 2,
-								range: {
-									start: file.document.positionAt(styleNodes[i].start),
-									end: file.document.positionAt(styleNodes[i].end),
-								},
-								source: 'html1',
-								message: 'Only one style tag is allowed.',
-							});
-						}
-						return errors;
-					},
-				},
-			}),
+			createTsPlugin(),
+			ngTemplatePlugin,
 		];
 	},
+});
+
+const ngTemplatePlugin: LanguageServicePlugin = (context) => ({
+
+	validation: {
+
+		onSyntactic(document) {
+
+			const file = context.documents.getVirtualFileByUri(document.uri);
+
+			if (file instanceof HTMLTemplateFile) {
+				return (file.parsed.errors ?? []).map<Diagnostic>(error => ({
+					range: {
+						start: { line: error.span.start.line, character: error.span.start.col },
+						end: { line: error.span.end.line, character: error.span.end.col },
+					},
+					severity: error.level === 1 ? 1 : 2,
+					source: 'ng-template',
+					message: error.msg,
+				}));
+			}
+		},
+	}
 });
 
 startLanguageServer(createConnection(), plugin);

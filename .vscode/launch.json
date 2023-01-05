@@ -3,14 +3,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch HTML1",
+			"name": "Launch Client",
 			"type": "extensionHost",
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--disable-extensions",
-				"--extensionDevelopmentPath=${workspaceRoot}/packages/vscode-html1",
-				"--folder-uri=${workspaceRoot}/sample",
+				"--extensionDevelopmentPath=${workspaceRoot}/packages/vscode-angular"
 			],
 			"outFiles": [
 				"${workspaceRoot}/*/*/out/**/*.js"
