@@ -1,4 +1,4 @@
-import { LanguageModule, VirtualFile, FileKind, FileRangeCapabilities } from '@volar/language-core';
+import { LanguageModule, VirtualFile, FileKind, FileRangeCapabilities, FileCapabilities } from '@volar/language-core';
 import type * as ts from 'typescript/lib/tsserverlibrary';
 import * as path from 'path';
 
@@ -17,14 +17,7 @@ export function createTsLanguageModule(
 					snapshot,
 					fileName,
 					text: virtualFile.text,
-					capabilities: {
-						diagnostic: true,
-						foldingRange: true,
-						documentFormatting: true,
-						documentSymbol: true,
-						codeAction: true,
-						inlayHint: true,
-					},
+					capabilities: FileCapabilities.full,
 					kind: FileKind.TypeScriptHostFile,
 					mappings: virtualFile.mappings,
 					embeddedFiles: [],
@@ -138,16 +131,6 @@ export function createTsLanguageModule(
 	}
 }
 
-const fullCap: FileRangeCapabilities = {
-	hover: true,
-	references: true,
-	definition: true,
-	rename: true,
-	completion: true,
-	diagnostic: true,
-	semanticTokens: true,
-};
-
 export class Codegen {
 
 	static validTsVar = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/;
@@ -157,7 +140,7 @@ export class Codegen {
 	public text = '';
 	public mappings: VirtualFile['mappings'] = [];
 
-	public addSourceText(start: number, end: number, data: FileRangeCapabilities = fullCap) {
+	public addSourceText(start: number, end: number, data = FileRangeCapabilities.full) {
 		this.mappings.push({
 			sourceRange: [start, end],
 			generatedRange: [this.text.length, this.text.length + end - start],
@@ -168,7 +151,7 @@ export class Codegen {
 		return addText;
 	}
 
-	public addPropertyAccess(start: number, end: number, data: FileRangeCapabilities = fullCap) {
+	public addPropertyAccess(start: number, end: number, data = FileRangeCapabilities.full) {
 		if (Codegen.validTsVar.test(this.sourceCode.substring(start, end))) {
 			this.text += `.`;
 			this.addSourceText(start, end, data);
@@ -180,7 +163,7 @@ export class Codegen {
 		}
 	}
 
-	public addObjectKey(start: number, end: number, data: FileRangeCapabilities = fullCap) {
+	public addObjectKey(start: number, end: number, data = FileRangeCapabilities.full) {
 		if (Codegen.validTsVar.test(this.sourceCode.substring(start, end))) {
 			this.addSourceText(start, end, data);
 		}
@@ -189,7 +172,7 @@ export class Codegen {
 		}
 	}
 
-	public addSourceTextWithQuotes(start: number, end: number, data: FileRangeCapabilities = fullCap) {
+	public addSourceTextWithQuotes(start: number, end: number, data = FileRangeCapabilities.full) {
 		this.addSourceText(start, start, data);
 		this.text += `'`;
 		this.addSourceText(start, end, data);

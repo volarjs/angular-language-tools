@@ -40,10 +40,6 @@ export class HTMLTemplateFile implements VirtualFile {
 				snapshot: this.ts.ScriptSnapshot.fromString(generated.codegen.text),
 				capabilities: {
 					diagnostic: true,
-					foldingRange: false,
-					documentFormatting: false,
-					documentSymbol: false,
-					codeAction: false,
 					inlayHint: true,
 				},
 				kind: FileKind.TypeScriptHostFile,
