@@ -1,29 +1,21 @@
-import { createTsLanguageModule, createHtmlLanguageModule, HTMLTemplateFile } from '@volar-examples/angular-language-core';
-import createTsPlugin from '@volar-plugins/typescript';
-import { createConnection, startLanguageServer, LanguageServerPlugin } from '@volar/language-server/node';
-import type { LanguageServicePlugin, Diagnostic } from '@volar/language-service';
+import { createHtmlLanguageModule, createTsLanguageModule, HTMLTemplateFile } from '@volar-examples/angular-language-core';
+import * as createTsPlugin from '@volar-plugins/typescript';
+import { LanguageServiceContext } from '@volar/language-server';
+import type { Config, Diagnostic, LanguageServicePlugin, LanguageServicePluginInstance } from '@volar/language-service';
 
-const plugin: LanguageServerPlugin = () => ({
-	extraFileExtensions: [{ extension: 'html', isMixedContent: true, scriptKind: 7 }],
-	getLanguageModules(host) {
-		const ts = host.getTypeScriptModule();
-		if (ts) {
-			return [
-				createTsLanguageModule(ts),
-				createHtmlLanguageModule(ts),
-			];
-		}
-		return [];
-	},
-	getLanguageServicePlugins() {
-		return [
-			createTsPlugin(),
-			ngTemplatePlugin,
-		];
-	},
-});
+export function resolveConfig(config: Config, ctx: LanguageServiceContext) {
+    const ts = ctx.host.getTypeScriptModule?.();
+    if (ts) {
+        config.languages ??= {};
+        config.languages['angular/html'] ??= createHtmlLanguageModule(ts);
+        config.languages['angular/ts'] ??= createTsLanguageModule(ts);
+    }
+    config.plugins ??= {};
+    config.plugins.typescript ??= createTsPlugin();
+    config.plugins['angular/ng-template'] ??= ngTemplatePlugin;
+}
 
-const ngTemplatePlugin: LanguageServicePlugin = (context) => ({
+const ngTemplatePlugin: LanguageServicePlugin = (context): LanguageServicePluginInstance => ({
 
 	validation: {
 
@@ -45,5 +37,3 @@ const ngTemplatePlugin: LanguageServicePlugin = (context) => ({
 		},
 	}
 });
-
-startLanguageServer(createConnection(), plugin);

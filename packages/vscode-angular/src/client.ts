@@ -3,9 +3,9 @@ import * as path from 'typesafe-path';
 import * as vscode from 'vscode';
 import * as lsp from 'vscode-languageclient/node';
 import {
-	registerShowVirtualFiles,
-	registerTsConfig,
-	registerTsVersion,
+	activateShowVirtualFiles,
+	activateTsConfigStatusItem,
+	activateTsVersionStatusItem,
 	takeOverModeActive,
 } from '@volar/vscode-language-client';
 import * as os from 'os';
@@ -92,9 +92,9 @@ async function doActivate(context: vscode.ExtensionContext) {
 	);
 	await client.start();
 
-	registerShowVirtualFiles('volar-angular.action.showVirtualFiles', context, client);
-	registerTsConfig('volar-angular.action.showTsConfig', context, client, isSupportDoc);
-	registerTsVersion('volar-angular.action.showTsVersion', context, client, isSupportDoc, text => text + ' (angular)');
+	activateShowVirtualFiles('volar-angular.action.showVirtualFiles', client);
+	activateTsConfigStatusItem('volar-angular.action.showTsConfig', client, isSupportDoc);
+	activateTsVersionStatusItem('volar-angular.action.showTsVersion', context, client, isSupportDoc, text => text + ' (angular)', true);
 }
 
 export function deactivate(): Thenable<any> | undefined {
