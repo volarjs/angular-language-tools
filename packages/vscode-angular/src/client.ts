@@ -7,7 +7,7 @@ import {
 	activateTsConfigStatusItem,
 	activateTsVersionStatusItem,
 	takeOverModeActive,
-} from '@volar/vscode-language-client';
+} from '@volar/vscode';
 import * as os from 'os';
 import * as fs from 'fs';
 
