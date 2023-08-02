@@ -212,8 +212,8 @@ function generate(
 				codegen.text += `}\n`;
 			}
 		},
-		visitContent(content) {
-			content.visit(visitor);
+		visitContent(_content) {
+			// content.visit(visitor);
 		},
 		visitVariable(variable) {
 			variable.visit(visitor);
