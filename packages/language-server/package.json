@@ -16,9 +16,15 @@
 		"directory": "packages/language-server"
 	},
 	"dependencies": {
-		"@volar-examples/angular-language-core": "1.0.24",
+		"@angular-eslint/bundled-angular-compiler": "^15.2.1",
+		"@volar/language-core": "1.4.0-alpha.3",
 		"@volar-plugins/typescript": "2.0.0-alpha.18",
 		"@volar/language-server": "1.4.0-alpha.3",
-		"@volar/language-service": "1.4.0-alpha.3"
+		"@volar/language-service": "1.4.0-alpha.3",
+		"vscode-languageserver-textdocument": "^1.0.8",
+		"vscode-uri": "^3.0.7"
+	},
+	"devDependencies": {
+		"@angular/compiler": "^15.2.0"
 	}
 }

@@ -1,4 +1,5 @@
-import { createHtmlLanguageModule, createTsLanguageModule, HTMLTemplateFile } from '@volar-examples/angular-language-core';
+import { createTsLanguageModule } from './languages/ts';
+import { createHtmlLanguageModule, HTMLTemplateFile } from './languages/html';
 import createTsPlugin from '@volar-plugins/typescript';
 import { LanguageServerPlugin } from '@volar/language-server';
 import type { Diagnostic, LanguageServicePlugin, LanguageServicePluginInstance } from '@volar/language-service';
