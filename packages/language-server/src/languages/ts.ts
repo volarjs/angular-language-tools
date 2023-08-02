@@ -1,4 +1,4 @@
-import { LanguageModule, VirtualFile, FileKind, FileRangeCapabilities, FileCapabilities } from '@volar/language-core';
+import { Language, VirtualFile, FileKind, FileRangeCapabilities, FileCapabilities } from '@volar/language-core';
 import type * as ts from 'typescript/lib/tsserverlibrary';
 import * as path from 'path';
 
@@ -6,8 +6,8 @@ export function createTsLanguageModule(
 	ts: typeof import('typescript/lib/tsserverlibrary'),
 ) {
 
-	const languageModule: LanguageModule<VirtualFile & { ast: ts.SourceFile, snapshot: ts.IScriptSnapshot; }> = {
-		createFile(fileName, snapshot) {
+	const languageModule: Language<VirtualFile & { ast: ts.SourceFile, snapshot: ts.IScriptSnapshot; }> = {
+		createVirtualFile(fileName, snapshot) {
 			if (fileName.endsWith('.ts')) {
 				const text = snapshot.getText(0, snapshot.getLength());
 				const ast = ts.createSourceFile(fileName, text, ts.ScriptTarget.Latest);
@@ -21,10 +21,11 @@ export function createTsLanguageModule(
 					kind: FileKind.TypeScriptHostFile,
 					mappings: virtualFile.mappings,
 					embeddedFiles: [],
+					codegenStacks: [],
 				};
 			}
 		},
-		updateFile(sourceFile, snapshot) {
+		updateVirtualFile(sourceFile, snapshot) {
 			const text = snapshot.getText(0, snapshot.getLength());
 			const change = snapshot.getChangeRange(sourceFile.snapshot);
 

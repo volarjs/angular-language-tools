@@ -1,4 +1,4 @@
-import { FileCapabilities, FileKind, LanguageModule, VirtualFile } from '@volar/language-core';
+import { FileCapabilities, FileKind, Language, VirtualFile } from '@volar/language-core';
 import type { TmplAstNode, TmplAstTemplate, ParsedTemplate, ParseSourceSpan } from '@angular/compiler';
 import { Codegen } from './ts';
 import type * as ts from 'typescript/lib/tsserverlibrary';
@@ -13,6 +13,7 @@ export class HTMLTemplateFile implements VirtualFile {
 	};
 	public kind = FileKind.TextFile;
 	public mappings: VirtualFile['mappings'] = [];
+	public codegenStacks: VirtualFile['codegenStacks'] = [];
 	public embeddedFiles: VirtualFile['embeddedFiles'] = [];
 	public parsed: ParsedTemplate;
 
@@ -45,6 +46,7 @@ export class HTMLTemplateFile implements VirtualFile {
 				kind: FileKind.TypeScriptHostFile,
 				mappings: generated.codegen.mappings,
 				embeddedFiles: [],
+				codegenStacks: [],
 			},
 		];
 		this.parsed = generated.parsed;
@@ -68,14 +70,14 @@ export class HTMLTemplateFile implements VirtualFile {
 	}
 }
 
-export function createHtmlLanguageModule(ts: typeof import('typescript/lib/tsserverlibrary')): LanguageModule<HTMLTemplateFile> {
+export function createHtmlLanguageModule(ts: typeof import('typescript/lib/tsserverlibrary')): Language<HTMLTemplateFile> {
 	return {
-		createFile(fileName, snapshot) {
+		createVirtualFile(fileName, snapshot) {
 			if (fileName.endsWith('.html')) {
 				return new HTMLTemplateFile(ts, fileName, snapshot);
 			}
 		},
-		updateFile(sourceFile, snapshot) {
+		updateVirtualFile(sourceFile, snapshot) {
 			sourceFile.update(snapshot);
 		},
 	};

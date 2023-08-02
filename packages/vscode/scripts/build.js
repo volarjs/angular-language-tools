@@ -14,7 +14,6 @@ require('esbuild').build({
 	tsconfig: './tsconfig.json',
 	define: { 'process.env.NODE_ENV': '"production"' },
 	minify: process.argv.includes('--minify'),
-	watch: process.argv.includes('--watch'),
 	plugins: [
 		{
 			name: 'umd2esm',

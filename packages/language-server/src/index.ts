@@ -1,25 +1,23 @@
 import { createTsLanguageModule } from './languages/ts';
 import { createHtmlLanguageModule, HTMLTemplateFile } from './languages/html';
-import createTsPlugin from '@volar-plugins/typescript';
-import { LanguageServerPlugin } from '@volar/language-server';
-import type { Diagnostic, LanguageServicePlugin, LanguageServicePluginInstance } from '@volar/language-service';
+import createTsPlugin from 'volar-service-typescript';
+import type { Config, Diagnostic, Service } from '@volar/language-service';
 
-export const resolveConfig: ReturnType<LanguageServerPlugin>['resolveConfig'] = (config, modules) => {
-	const ts = modules.typescript;
+export const resolveConfig = (config: Config, ts?: typeof import('typescript/lib/tsserverlibrary')) => {
 	if (ts) {
 		config.languages ??= {};
 		config.languages['angular/html'] ??= createHtmlLanguageModule(ts);
 		config.languages['angular/ts'] ??= createTsLanguageModule(ts);
 	}
-	config.plugins ??= {};
-	config.plugins.typescript ??= createTsPlugin();
-	config.plugins['angular/ng-template'] ??= ngTemplatePlugin;
+	config.services ??= {};
+	config.services.typescript ??= createTsPlugin();
+	config.services['angular/ng-template'] ??= ngTemplatePlugin;
 	return config;
 }
 
-const ngTemplatePlugin: LanguageServicePlugin = (context): LanguageServicePluginInstance => ({
+const ngTemplatePlugin: Service = (context): ReturnType<Service> => ({
 
-	provideSyntacticDiagnostics(document) {
+	provideDiagnostics(document) {
 
 		const file = context?.documents.getVirtualFileByUri(document.uri);
 

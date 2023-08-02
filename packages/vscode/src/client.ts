@@ -1,12 +1,14 @@
-import type { LanguageServerInitializationOptions } from '@volar/language-server';
+import type { InitializationOptions } from '@volar/language-server';
+import * as protocol from '@volar/language-server/protocol';
 import * as path from 'typesafe-path';
 import * as vscode from 'vscode';
 import * as lsp from 'vscode-languageclient/node';
 import {
-	activateShowVirtualFiles,
 	activateTsConfigStatusItem,
 	activateTsVersionStatusItem,
 	takeOverModeActive,
+	ExportsInfoForLabs,
+	supportLabsVersion,
 } from '@volar/vscode';
 import * as os from 'os';
 import * as fs from 'fs';
@@ -55,7 +57,7 @@ async function doActivate(context: vscode.ExtensionContext) {
 		{ language: 'html' },
 		{ language: 'typescript' },
 	];
-	const initializationOptions: LanguageServerInitializationOptions = {
+	const initializationOptions: InitializationOptions = {
 		typescript: {
 			tsdk: path.join(
 				vscode.env.appRoot as path.OsPath,
@@ -63,7 +65,6 @@ async function doActivate(context: vscode.ExtensionContext) {
 			),
 		},
 		cancellationPipeName,
-		noProjectReferences: true,
 	};
 	const serverModule = vscode.Uri.joinPath(context.extensionUri, 'server.js');
 	const runOptions = { execArgv: <string[]>[] };
@@ -92,9 +93,16 @@ async function doActivate(context: vscode.ExtensionContext) {
 	);
 	await client.start();
 
-	activateShowVirtualFiles('volar-angular.action.showVirtualFiles', client);
 	activateTsConfigStatusItem('volar-angular.action.showTsConfig', client, isSupportDoc);
 	activateTsVersionStatusItem('volar-angular.action.showTsVersion', context, client, isSupportDoc, text => text + ' (angular)', true);
+
+	return {
+		volarLabs: {
+			version: supportLabsVersion,
+			languageClients: [client],
+			languageServerProtocol: protocol,
+		},
+	} satisfies ExportsInfoForLabs;
 }
 
 export function deactivate(): Thenable<any> | undefined {

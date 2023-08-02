@@ -92,11 +92,11 @@
 	"devDependencies": {
 		"@types/vscode": "1.67.0",
 		"@volar-examples/angular-language-server": "1.0.24",
-		"@volar/language-server": "1.4.0-alpha.3",
-		"@volar/vscode": "1.4.0-alpha.3",
+		"@volar/language-server": "~1.10.0",
+		"@volar/vscode": "~1.10.0",
 		"esbuild": "latest",
 		"typesafe-path": "^0.2.2",
 		"vsce": "latest",
-		"vscode-languageclient": "^8.0.2"
+		"vscode-languageclient": "^8.1.0"
 	}
 }

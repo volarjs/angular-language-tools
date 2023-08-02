@@ -2,11 +2,11 @@ import { createConnection, LanguageServerPlugin, startLanguageServer } from '@vo
 import { resolveConfig } from '.';
 
 const connection = createConnection();
-const plugin: LanguageServerPlugin = (): ReturnType<LanguageServerPlugin> => {
+const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlugin> => {
 	return {
 		extraFileExtensions: [{ extension: 'html', isMixedContent: true, scriptKind: 7 }],
 		watchFileExtensions: ['js', 'cjs', 'mjs', 'ts', 'cts', 'mts', 'jsx', 'tsx', 'json', 'svelte'],
-		resolveConfig: resolveConfig,
+		resolveConfig: config => resolveConfig(config, modules?.typescript),
 	}
 };
 
