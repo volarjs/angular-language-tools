@@ -6,9 +6,7 @@
 	},
 	"scripts": {
 		"build": "tsc -b packages/vscode/tsconfig.json",
-		"watch": "npm run build && (npm run watch:tsc & npm run watch:esbuild)",
-		"watch:tsc": "tsc -b packages/vscode/tsconfig.json -w",
-		"watch:esbuild": "cd ./packages/vscode && npm run watch",
+		"watch": "tsc -b packages/vscode/tsconfig.json -w",
 		"prerelease": "npm run build",
 		"pack": "cd ./packages/vscode && npm run pack",
 		"release": "cd ./packages/vscode && npm run release"

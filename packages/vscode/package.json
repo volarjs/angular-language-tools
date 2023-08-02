@@ -53,13 +53,6 @@
 				]
 			}
 		],
-		"commands": [
-			{
-				"command": "volar-angular.action.showVirtualFiles",
-				"title": "Show Virtual Files",
-				"category": "Volar-Angular (Debug)"
-			}
-		],
 		"configuration": {
 			"type": "object",
 			"title": "Volar-Angular",
